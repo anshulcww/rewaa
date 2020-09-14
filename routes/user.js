@@ -2,27 +2,53 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
 const User = require('../models/user')
-const Audit = require('../models/audit')
+const Audit = require('../models/product')
 const mongoose = require('mongoose')
+const Product = require('../models/product')
 
 const ObjectId = mongoose.Types.ObjectId
 
-//Delete User
-router.delete('/:deleteUserId', auth, async(req, res) => {
+// Add Product
+router.post('/addProducts', auth, async (req, res) => {
+    try{
+        const {
+            productName,
+            productType
+        } = req.body
+        let product = new Product({
+            productName,
+            productType
+        })
+        let result = await product.save()
+        res.status(201).send({
+            success :  true,
+            data : result
+        })
+    }catch(error){
+        console.log(error)
+        req.status(400).send({
+            success :  false,
+            error: error
+        })
+    }
+})
+
+//Delete Product
+router.delete('/:deleteProductId', auth, async(req, res) => {
     try{
      
-        let deleteUser =  await User.deleteOne({_id : ObjectId(req.params.deleteUserId)}, (err, result) => {
+        let deleteProduct =  await Product.deleteOne({_id : ObjectId(req.params.deleteUserId)}, (err, result) => {
             if(err){
                 res.status(201).json({
                     success : false,
-                    message : 'User not found'
+                    message : 'Product not found'
                 })
                 return
             }
             //console.log(result)
             res.status(201).json({
                 success : true,
-                message : 'User deleted succesfully'
+                message : 'Product deleted succesfully'
             })
             return
 
@@ -37,69 +63,22 @@ router.delete('/:deleteUserId', auth, async(req, res) => {
 })
 
 
-//Edit users
-router.put('/edit_user', auth, async(req, res) => {
-    console.log('anshul')
+
+
+//Get All List of Products
+
+router.get('/products', auth,  async (req, res) => {
     try{
-        const {
-          updateUserId,
-          firstName,
-          lastName,
-          phoneNumber,
-          email
-        } = req.body
-        console.log(req.body, 'bodyy')
-        const updateUser = await User.findOne({_id : ObjectId(updateUserId)});
-        if (!updateUser) {
-            res.status(201).send({
-                success: false,
-                message: 'Update user Id Not found'
-            })
-            return
-        }
-        if (firstName) {
-            updateUser.firstName = firstName
-        }
-        if (lastName) {
-            updateUser.lastName = lastName
-        }
-        if (phoneNumber) {
-            updateUser.phoneNumber = phoneNumber
-        }
-        if (email) {
-            updateUser.email = email
-        }
-
-        await updateUser.save()
-        res.status(201).send({
-            success: true
-        })
-
-    }catch(err){
-        console.log(err, 'err')
-        console.log('anshul')
-        res.status(400).send({
-            success: false,
-            message: "User not authorized"
-        })
-    }
-})
-
-
-//Get All Users
-
-router.get('/users', auth,  async (req, res) => {
-    try{
-        const user =await User.find({}).sort({_id:-1});
+        const product =await Product.find({}).sort({_id:-1});
         res.status(201).json({
             success : true,
-            users : user
+            products : product
         })
     }catch(error){
         console.log(error)
         res.status(400).send({
             success: false,
-            message: "Invalid registered user"
+            message: error
         })
     }
 })

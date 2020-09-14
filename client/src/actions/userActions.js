@@ -1,56 +1,20 @@
-import { NEW_USER, FETCH_USERS } from './types';
+import { NEW_USER, FETCH_PRODUCTS } from './types';
 // import history from './history';
 import axios from 'axios';
 import history from '../history';
 let baseUrl = 'http://localhost:5000'
 
-// Delete User
-export const deleteUser = (userId) => async dispatch => {
-  let token = localStorage.getItem('token');
-  console.log(token)
-  return await axios.delete(baseUrl + '/user/' + userId,  { 'headers': { 'Authorization': token } })
-    .then((res) => {
-      if (res.status === 201 && res.data.success) {
-          console.log(res.data, 'datatsdak')
-          dispatch(getUsers())
-          history.push('/')
-        }
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
 
-
-
-// Edit User Details
-export const editUser = (userdet) => async dispatch => {
-  let token = localStorage.getItem('token');
-  console.log(token)
-  return await axios.put(baseUrl + '/user/edit_user', userdet, { 'headers': { 'Authorization': token } })
-    .then((res) => {
-      if (res.status === 201 && res.data.success) {
-          console.log(res.data, 'datatsdak')
-          dispatch(getUsers())
-          history.push('/')
-        }
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-
-
-//Get All Registered Users
-export const getUsers = () => async dispatch => {
+// //Get All Registered Users
+export const getProducts = () => async dispatch => {
     let token = localStorage.getItem('token');
-    return await axios.get(baseUrl + '/user/users', { 'headers': { 'Authorization': token } })
+    return await axios.get(baseUrl + '/user/products', { 'headers': { 'Authorization': token } })
       .then((res) => {
         if (res.status === 201 && res.data.success) {
             //console.log(res.data.users)
           dispatch({
-              type : FETCH_USERS,
-              payload : res.data.users
+              type : FETCH_PRODUCTS,
+              payload : res.data.products
           })
         }
       })

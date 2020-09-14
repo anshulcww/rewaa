@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { getUsers } from '../../actions/userActions'
+// import { getUsers } from '../../actions/userActions'
 import { logout } from '../../actions/userActions'
-import { editUser } from '../../actions/userActions'
-import { deleteUser } from '../../actions/userActions'
+// import { editUser } from '../../actions/userActions'
+// import { deleteUser } from '../../actions/userActions'
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -84,7 +84,7 @@ class DashboardComponent extends Component {
     }
     async componentDidMount() {
 
-        await this.props.getUsers()
+        // await this.props.getUsers()
     }
 
     render() {
@@ -114,54 +114,25 @@ class DashboardComponent extends Component {
                 </div>
                 <div className='row'>
                     {
-                        this.props.users.map((u, index) => (
+                        this.props.products.map((p, index) => (
                             <div className="card user-card" key={index}>
-                                <img src="/avatar.jpg" class="card-img-top" alt="..." />
                                 <div class="card-body">
-                                    <h5 class="card-title"><span>{u.firstName}</span><span> {u.lastName}</span></h5>
-                                    <p class="card-text">{u.email}</p>
-                                    <button type='button' onClick={() => this.handleClick(u)}>Edit</button>
-                                    <button type='button' onClick= {() => this.handleDeleteUser(u)}>Delete</button>
+                                    <h5 class="card-title"><span>{p.productName}</span><span> {u.productType}</span></h5>
                                 </div>
                             </div>
                         ))
                     }
                 </div>
-                <Modal
-                    isOpen={this.state.modalIsOpen}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                >
-
-                    <h3>Edit User Details</h3>
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="row">
-                            <div className="col">
-                                <label>First Name</label>
-                                <input type="text" className="form-control" name='firstName' placeholder="First name" onChange={this.handleChange} value = {this.state.firstName} required />
-                            </div>
-                            <div className="col">
-                                <label>Last Name</label>
-                                <input type="text" className="form-control" name='lastName' placeholder="Last name" onChange={this.handleChange} value = {this.state.lastName} required />
-                            </div>
-                        </div>
-                        <br></br>
-                        <div className="form-group">
-                            <label >Email address</label>
-                            <input type="email" className="form-control" name='email' placeholder="Enter email" onChange={this.handleChange} value = {this.state.email} required />
-                        </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                    </form>
-                </Modal>
+       
             </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    users: state.user.users,
+    products: state.user.products,
     user: state.user.user
 })
 
 
-export default connect(mapStateToProps, { getUsers, logout, editUser, deleteUser })(DashboardComponent);
+export default connect(mapStateToProps, {  logout })(DashboardComponent);
